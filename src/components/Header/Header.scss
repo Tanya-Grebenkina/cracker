@@ -1,0 +1,74 @@
+@import '../../assets/styles/variables';
+
+.header {
+  &__content {
+    background-color: #000;
+  }
+}
+
+.cart-bar {
+  padding-block: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__logo {
+    height: 40px;
+  }
+
+  &__details {
+    display: flex;
+    align-items: center;
+    column-gap: 24px;
+  }
+
+  &__details-cart {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+    cursor: pointer;
+  }
+
+  &__price {
+    text-transform: uppercase;
+  }
+
+  &__text {
+    text-transform: uppercase;
+  }
+
+  &__arrow {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+
+
+  &__icon-seed {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-size: cover;
+    background-position: center;
+
+    background-image: url('../../assets/images/seed.svg');
+  }
+
+  &__value {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border-radius: 50%;
+    display: block;
+    background-color: $accent;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

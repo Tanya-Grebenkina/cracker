@@ -1,0 +1,139 @@
+@import '../../assets/styles/variables';
+
+// $main-text-color-dark: #4D4D4D;
+
+.cart {
+  &__wrapper {
+    background-color: #fff;
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+    position: absolute;
+    right: 210px;
+    width: 586px;
+    height: 260px;
+    overflow: auto;
+    border-radius: 24px;
+    padding: 32px;
+    z-index: 2;
+  }
+
+  &__price--cart {
+    text-transform: uppercase;
+    color: $main-text-color-dark;
+
+  }
+
+  &__top {
+    display: flex;
+    gap: 24px;
+    padding: 0 78px;
+    margin-bottom: 12px;
+  }
+
+  &__empty {
+    display: flex;
+    justify-content: center;
+    color: $accent;
+    font-size: 30px;
+    font-weight: 500;
+  }
+
+  &__icon {
+    width: 32px;
+    height: 32px;
+    background-repeat: no-repeat;
+
+    &--feature1 {
+      background-image: url('../../assets/images/cart-features-icons/features-dark1.svg');
+    }
+
+    &--feature2 {
+      background-image: url('../../assets/images/cart-features-icons/features-dark2.svg');
+    }
+
+    &--feature3 {
+      background-image: url('../../assets/images/cart-features-icons/features-dark3.svg');
+    }
+
+    &--feature4 {
+      background-image: url('../../assets/images/cart-features-icons/features-dark4.svg');
+    }
+  }
+
+  &__boxing {
+    flex-direction: column;
+    display: flex;
+  }
+
+  &__items {
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(77, 77, 77, 0.2);
+  }
+
+  &__item-img {
+    background-position: center;
+    background-image: url('../../assets/images/dark-seed.svg');
+    width: 32px;
+    height: 32px;
+    background-repeat: no-repeat;
+  }
+
+  &__item-info-wrapper {
+    display: flex;
+    gap: 24px;
+  }
+
+  &__item-product {
+    font-size: 16px;
+    line-height: 24px;
+    color: $accent;
+  }
+
+  &__item-weight {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: $main-text-color-dark;
+  }
+
+  &__item-price {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: $main-text-color-dark;
+  }
+
+  &__btn-remove {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    width: 22px;
+    height: 22px;
+    padding: 4px;
+    border: 1px solid rgba(77, 77, 77, 0.2);
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid rgba(77, 77, 77, 0.8);
+    }
+  }
+  &__bottom {
+    padding: 10px;
+  }
+
+  &__bottom-wrapper {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+  }
+}
