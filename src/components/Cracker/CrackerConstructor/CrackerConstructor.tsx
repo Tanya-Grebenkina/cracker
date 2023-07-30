@@ -5,21 +5,28 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ArrowRedDown, ArrowRedUp, AddButton } from '../../Icons';
 import { addToCart } from '../../../features/cart/cartSlice';
-
+import { CartItem } from '../../../global/types';
 import './CrackerConstructor.scss';
+
 import {
   TOTAL_LIMIT,
-  OPTIONS,
-  SMALL_PACK,
-  MEDIUM_PACK,
-  LARGE_PACK,
-  TITLE__PACK,
+  PackSize,
 } from './crackerConsts';
 
 import { calculatePrice, calculateRemaining } from './crackerUtils';
 
-export const CrackerConstructor = () => {
-  const [pendingProduct, setPendingProduct] = useState({
+//TOSO: Move to cracker types.ts
+interface PendingProduct {
+  corn: number;
+  wheat: number;
+  quinoa: number;
+  autoFillValue: number;
+  price: number;
+  weight: number;
+}
+
+export const CrackerConstructor:React.FC = () => {
+  const [pendingProduct, setPendingProduct] = useState<PendingProduct>({
     corn: 0,
     wheat: 0,
     quinoa: 0,
@@ -30,7 +37,7 @@ export const CrackerConstructor = () => {
   });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(TITLE__PACK);
+  const [selectedOption, setSelectedOption] = useState<PackSize>(PackSize.NONE_PACK);
 
   const dispatch = useDispatch();
 
@@ -61,10 +68,9 @@ export const CrackerConstructor = () => {
         price: calculatedPrice,
       }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pendingProduct]);
+  }, [pendingProduct.corn, pendingProduct.wheat, pendingProduct.quinoa]);
 
-  const handleProductChange = (productType, newValue) => {
+  const handleProductChange = (productType: keyof PendingProduct, newValue: number) => {
     const updatedProduct = { ...pendingProduct, [productType]: newValue };
     const totalRemaining =
       TOTAL_LIMIT +
@@ -79,40 +85,43 @@ export const CrackerConstructor = () => {
   };
 
   const resetValues = () => {
-    pendingProduct.corn = 0;
-    pendingProduct.wheat = 0;
-    pendingProduct.quinoa = 0;
-    pendingProduct.autoFillValue = 0;
-    pendingProduct.weight = 0;
-    pendingProduct.price = 0;
+    setPendingProduct({
+      corn: 0,
+      wheat: 0,
+      quinoa: 0,
+      autoFillValue: 0,
+      price: 0,
+      weight: 0,
+    });
   };
 
   const handleAddToCart = () => {
-    const productData = {
+    const productData: CartItem = {
       id: uuidv4(),
-      cornProduct: pendingProduct.corn,
-      wheatProduct: pendingProduct.wheat,
-      quinoaProduct: pendingProduct.quinoa,
-      autoFillProduct: pendingProduct.autoFillValue,
+      corn: pendingProduct.corn,
+      wheat: pendingProduct.wheat,
+      quinoa: pendingProduct.quinoa,
+      autoFillValue: pendingProduct.autoFillValue,
       weight: pendingProduct.weight,
       price: pendingProduct.price,
     };
 
     dispatch(addToCart(productData));
+
     resetValues();
-    setSelectedOption(TITLE__PACK);
+    setSelectedOption(PackSize.NONE_PACK);
   };
 
-  const handlePackageOption = (packSize) => {
+  const handlePackageOption = (packSize: PackSize) => {
     setSelectedOption(packSize);
-    switch (packSize.toUpperCase()) {
-      case SMALL_PACK:
+    switch (packSize) {
+      case PackSize.SMALL_PACK:
         setPendingProduct({ ...pendingProduct, weight: 1 });
         break;
-      case MEDIUM_PACK:
+      case PackSize.MEDIUM_PACK:
         setPendingProduct({ ...pendingProduct, weight: 2 });
         break;
-      case LARGE_PACK:
+      case PackSize.NONE_PACK:
         setPendingProduct({ ...pendingProduct, weight: 3 });
         break;
     }
@@ -218,9 +227,7 @@ export const CrackerConstructor = () => {
                   min={0}
                   max={TOTAL_LIMIT}
                   value={pendingProduct.autoFillValue}
-                  readOnly
                   step={1}
-                  trackClassName="custom-track"
                 />
                 <span className="cracker-constructor__percentages">
                   {pendingProduct.autoFillValue} %
@@ -254,13 +261,14 @@ export const CrackerConstructor = () => {
                       open: isMenuOpen,
                     })}>
                     <ul className="package-options__select-options">
-                      {OPTIONS.map((option) => (
+                      {Object.values(PackSize).map((option, index) => (
                         <li
                           key={option}
                           className={cn('package-options__option', {
                             selected: selectedOption === option,
+                            disabled: index === 0,
                           })}
-                          onClick={() => handlePackageOption(option)}>
+                          onClick={index === 0 ? undefined : () => handlePackageOption(option as PackSize)}>
                           {option}
                         </li>
                       ))}
@@ -271,18 +279,20 @@ export const CrackerConstructor = () => {
                 <div className="package-options__button-container">
                   <button
                     className="package-options__button btn btn--add"
-                    onClick={handleAddToCart}></button>
-
-                  <span
-                    className="package-options__button-add-to-cart btn"
                     onClick={handleAddToCart}>
-                    add to cart
-                    <div className="package-options__krestik-wrapper">
-                      <span className="package-options__krestik">
-                        <AddButton />
-                      </span>
-                    </div>
-                  </span>
+                       <AddButton />
+                    </button>
+
+                  <button
+                      className="package-options__button-add-to-cart btn"
+                      onClick={handleAddToCart}>
+                      add to cart
+                      <div className="package-options__icon-plus-wrapper">
+                        <span className="package-options__icon-plus">
+                          <AddButton />
+                        </span>
+                      </div>
+                    </button>
                 </div>
               </div>
             </div>

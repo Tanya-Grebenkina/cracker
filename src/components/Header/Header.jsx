@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp } from '../Icons';
 import './Header.scss';
 
 export const Header = ({ toggleCart, showCart }) => {
+
   const { totalAmount, totalPrice } = useSelector(
     (state) => state.cart,
   );

@@ -1,10 +1,11 @@
-import { CartItem } from '../CartItem';
+import { CartItemComponent } from '../CartItemComponent/';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 import './Cart.scss';
 
 export const Cart = () => {
-  const { cartItems, totalPrice } = useSelector((state) => state.cart);
+  const { cartItems, totalPrice } = useSelector((state: RootState) => state.cart);
 
   return (
     <div className="cart">
@@ -20,9 +21,9 @@ export const Cart = () => {
           <div className="cart__items">
             {cartItems.map((item) => {
               return (
-                <CartItem
+                <CartItemComponent
                   key={item.id}
-                  {...item}
+                  item={item}
                 />
               );
             })}

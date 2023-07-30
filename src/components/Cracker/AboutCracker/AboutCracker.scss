@@ -61,4 +61,18 @@
       z-index: -1;
     }
   }
+
+  &__logo {
+    position: relative;
+    font-family: Dancing Script;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: 1px;
+    color: $main-text-color-dark;
+    align-self:center;
+    margin-top: 125px;
+    z-index: 1;
+    right: 120px;
+  }
 }

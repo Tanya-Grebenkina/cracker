@@ -1,1 +1,1 @@
-export * from './CrackerConstructor.jsx';
+export * from './CrackerConstructor.tsx';

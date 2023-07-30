@@ -1,6 +1,7 @@
+import React from 'react';
 import './Nav.scss';
 
-export const Nav = () => {
+export const Nav: React.FC = () => {
   return (
     <nav className="nav">
       <div className="nav__content">

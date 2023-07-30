@@ -1,1 +1,1 @@
-export * from './AboutCracker.jsx';
+export * from './AboutCracker.tsx';

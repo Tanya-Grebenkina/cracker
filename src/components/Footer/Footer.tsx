@@ -5,7 +5,6 @@ import {
   Phone,
   Address,
   SocialMedia,
-  // Address,
 } from '../Icons';
 
 import './Footer.scss';
@@ -16,7 +15,6 @@ export const Footer = () => {
       <div className="container">
         <div className="footer__wrapper">
           <div className="footer__phone">
-            {/* <div className="footer__call-icon"></div> */}
             <a
               href="#"
               className="footer__call-icon">

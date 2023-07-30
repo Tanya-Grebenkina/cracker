@@ -1,3 +1,4 @@
+import React from 'react';
 import './AboutCracker.scss';
 
 export const AboutCracker = () => {
@@ -25,6 +26,7 @@ export const AboutCracker = () => {
               nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
               reprehenderit.
             </p>
+          <span className="about-cracker__logo">Cracker</span>
           </div>
         </div>
       </div>

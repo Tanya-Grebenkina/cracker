@@ -1,4 +1,6 @@
-export const ArrowDown = () => {
+import React from 'react';
+
+export const ArrowDown: React.FC = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -99,6 +101,9 @@ export const AddButton = () => {
     </svg>
   );
 };
+
+
+
 
 export const RemoveIcon = () => {
   return (

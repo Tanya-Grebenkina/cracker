@@ -1,1 +1,1 @@
-export * from './Nav.jsx';
+export * from './Nav.tsx';
