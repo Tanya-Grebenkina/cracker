@@ -1,3 +1,7 @@
-export const calculatePrice = (cornProduct, wheatProduct, quinoaProduct) => {
-  return cornProduct * 1 + wheatProduct * 2 + quinoaProduct * 3;
+export const calculatePrice = (cornAmount, wheatAmount, quinoaAmount) => {
+  return cornAmount * 1 + wheatAmount * 2 + quinoaAmount * 3;
 };
+
+export const calculateRemaining = (totalLimit, cornAmount, wheatAmount, quinoaAmount) => {
+  return totalLimit - (cornAmount + wheatAmount + quinoaAmount);
+}

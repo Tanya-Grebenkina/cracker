@@ -8,14 +8,15 @@ import { addToCart } from '../../../features/cart/cartSlice';
 
 import './CrackerConstructor.scss';
 import {
-  totalLimit,
-  options,
+  TOTAL_LIMIT,
+  OPTIONS,
   SMALL_PACK,
   MEDIUM_PACK,
   LARGE_PACK,
+  TITLE__PACK,
 } from './crackerConsts';
 
-import { calculatePrice } from './crackerUtils';
+import { calculatePrice, calculateRemaining } from './crackerUtils';
 
 export const CrackerConstructor = () => {
   const [pendingProduct, setPendingProduct] = useState({
@@ -29,16 +30,19 @@ export const CrackerConstructor = () => {
   });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('choose your pack');
+  const [selectedOption, setSelectedOption] = useState(TITLE__PACK);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const availableRemain =
-      totalLimit -
-      (pendingProduct.corn + pendingProduct.weight + pendingProduct.quinoa);
+    const availableRemain = calculateRemaining(
+      TOTAL_LIMIT,
+      pendingProduct.corn,
+      pendingProduct.wheat,
+      pendingProduct.quinoa,
+    );
 
-    if (availableRemain === totalLimit) {
+    if (availableRemain === TOTAL_LIMIT) {
       setPendingProduct((prevProd) => ({
         ...prevProd,
         autoFillValue: 0,
@@ -50,6 +54,7 @@ export const CrackerConstructor = () => {
         pendingProduct.wheat,
         pendingProduct.quinoa,
       );
+
       setPendingProduct((prevProd) => ({
         ...prevProd,
         autoFillValue: availableRemain,
@@ -59,34 +64,18 @@ export const CrackerConstructor = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingProduct]);
 
-  const handleCornChange = (newCorn) => {
-    const product = pendingProduct;
-    const newValue = parseFloat(newCorn);
-    const maxValue = totalLimit - (product.quinoa + product.wheat);
+  const handleProductChange = (productType, newValue) => {
+    const updatedProduct = { ...pendingProduct, [productType]: newValue };
+    const totalRemaining =
+      TOTAL_LIMIT +
+      newValue -
+      (updatedProduct.corn + updatedProduct.wheat + updatedProduct.quinoa);
+    const maxAllowed = Math.min(newValue, totalRemaining);
 
-    let corn = newValue <= maxValue ? newValue : maxValue;
-
-    setPendingProduct((prevProduct) => ({ ...prevProduct, corn: corn }));
-  };
-
-  const handleWheatChange = (newWheat) => {
-    const product = pendingProduct;
-    const newValue = parseFloat(newWheat);
-    const maxValue = totalLimit - (product.corn + product.quinoa);
-
-    let wheat = newValue <= maxValue ? newValue : maxValue;
-
-    setPendingProduct((prevProduct) => ({ ...prevProduct, wheat: wheat }));
-  };
-
-  const handleQuinoaChange = (newQuinoa) => {
-    const product = pendingProduct;
-    const newValue = parseFloat(newQuinoa);
-    const maxValue = totalLimit - (product.wheat + product.corn);
-
-    let quinoa = newValue <= maxValue ? newValue : maxValue;
-
-    setPendingProduct((prevProduct) => ({ ...prevProduct, quinoa: quinoa }));
+    setPendingProduct((prevProduct) => ({
+      ...prevProduct,
+      [productType]: maxAllowed,
+    }));
   };
 
   const resetValues = () => {
@@ -97,17 +86,6 @@ export const CrackerConstructor = () => {
     pendingProduct.weight = 0;
     pendingProduct.price = 0;
   };
-
-  // const handleChange = (value, setFunction, productFirst, productSecond) => {
-  //   const newValue = parseFloat(value);
-  //   const maxValue = totalLimit - (productFirst + productSecond);
-
-  //   if (newValue <= maxValue) {
-  //     setPendingProduct(newValue);
-  //   } else {
-  //     setPendingProduct(setFunction(maxValue));
-  //   }
-  // };
 
   const handleAddToCart = () => {
     const productData = {
@@ -122,7 +100,7 @@ export const CrackerConstructor = () => {
 
     dispatch(addToCart(productData));
     resetValues();
-    console.log(productData);
+    setSelectedOption(TITLE__PACK);
   };
 
   const handlePackageOption = (packSize) => {
@@ -176,12 +154,12 @@ export const CrackerConstructor = () => {
                     formatter: null,
                   }}
                   min={0}
-                  max={totalLimit}
+                  max={TOTAL_LIMIT}
                   value={pendingProduct.corn}
                   step={1}
                   trackStyle={{ backgroundColor: '#00A651' }}
                   railStyle={{ backgroundColor: '#00A651' }}
-                  onChange={(value) => handleCornChange(value)}
+                  onChange={(value) => handleProductChange('corn', value)}
                 />
                 <span className="cracker-constructor__percentages">
                   {pendingProduct.corn}%
@@ -197,11 +175,11 @@ export const CrackerConstructor = () => {
                     formatter: null,
                   }}
                   min={0}
-                  max={totalLimit}
+                  max={TOTAL_LIMIT}
                   value={pendingProduct.wheat}
                   trackStyle={{ backgroundColor: '#49743F' }}
                   railStyle={{ backgroundColor: '#49743F' }}
-                  onChange={(value) => handleWheatChange(value)}
+                  onChange={(value) => handleProductChange('wheat', value)}
                 />
                 <span className="cracker-constructor__percentages">
                   {pendingProduct.wheat} %
@@ -217,12 +195,12 @@ export const CrackerConstructor = () => {
                     formatter: null,
                   }}
                   min={0}
-                  max={totalLimit}
+                  max={TOTAL_LIMIT}
                   value={pendingProduct.quinoa}
                   trackStyle={{ backgroundColor: '#ABA000' }}
                   railStyle={{ backgroundColor: '#ABA000' }}
                   step={1}
-                  onChange={(value) => handleQuinoaChange(value)}
+                  onChange={(value) => handleProductChange('quinoa', value)}
                 />
                 <span className="cracker-constructor__percentages">
                   {pendingProduct.quinoa} %
@@ -238,7 +216,7 @@ export const CrackerConstructor = () => {
                     formatter: null,
                   }}
                   min={0}
-                  max={totalLimit}
+                  max={TOTAL_LIMIT}
                   value={pendingProduct.autoFillValue}
                   readOnly
                   step={1}
@@ -276,7 +254,7 @@ export const CrackerConstructor = () => {
                       open: isMenuOpen,
                     })}>
                     <ul className="package-options__select-options">
-                      {options.map((option) => (
+                      {OPTIONS.map((option) => (
                         <li
                           key={option}
                           className={cn('package-options__option', {
