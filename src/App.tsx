@@ -18,18 +18,12 @@ export const App = () => {
   const { cartItems } = useSelector((state: RootState) => state.cart);
 
   const [showCart, setShowCart] = useState(false);
-  ////
+
   const cartRef = useRef<HTMLDivElement>(null);
 
   const toggleCart = () => {
     setShowCart(!showCart);
   };
-
-  ////////
-  const closeCart = () => {
-    setShowCart(false);
-  };
-  ///////
 
   const dispatch = useDispatch();
 

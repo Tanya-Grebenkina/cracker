@@ -11,8 +11,3 @@ export const calculateTotals = (state: CartState) => {
   state.totalAmount = totalAmount;
   state.totalPrice = totalPrice;
 };
-
-
-
-
-

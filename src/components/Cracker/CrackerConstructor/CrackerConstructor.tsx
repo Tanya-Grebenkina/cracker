@@ -1,11 +1,12 @@
 import { Slider } from 'antd';
 import cn from 'classnames';
 import { v4 as uuidv4 } from 'uuid';
+
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ArrowRedDown, ArrowRedUp, AddButton } from '../../Icons';
 import { addToCart } from '../../../features/cart/cartSlice';
-import { CartItem } from '../../../global/types';
+import { CartItem, PendingProduct } from '../../../global/types';
+import { ArrowRedDown, ArrowRedUp, AddButton } from '../../Icons';
 import './CrackerConstructor.scss';
 
 import {
@@ -14,16 +15,6 @@ import {
 } from './crackerConsts';
 
 import { calculatePrice, calculateRemaining } from './crackerUtils';
-
-//TOSO: Move to cracker types.ts
-interface PendingProduct {
-  corn: number;
-  wheat: number;
-  quinoa: number;
-  autoFillValue: number;
-  price: number;
-  weight: number;
-}
 
 export const CrackerConstructor:React.FC = () => {
   const [pendingProduct, setPendingProduct] = useState<PendingProduct>({
@@ -38,7 +29,6 @@ export const CrackerConstructor:React.FC = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<PackSize>(PackSize.NONE_PACK);
-
   const dispatch = useDispatch();
 
   useEffect(() => {

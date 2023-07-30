@@ -13,3 +13,12 @@ export interface CartItem {
   totalAmount: number;
   totalPrice: number;
 }
+
+export interface PendingProduct {
+  corn: number;
+  wheat: number;
+  quinoa: number;
+  autoFillValue: number;
+  price: number;
+  weight: number;
+}
