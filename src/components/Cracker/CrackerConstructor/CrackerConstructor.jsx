@@ -2,110 +2,145 @@ import { Slider } from 'antd';
 import cn from 'classnames';
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ArrowRedDown, ArrowRedUp, AddButton } from '../../Icons';
-import {
-  updateCorn,
-  updateWheat,
-  updateQuinoa,
-  updateAutoFill,
-  updateProductPrice,
-  updateProductWeight,
-  addToCart,
-  resetValues,
-} from '../../../features/cart/cartSlice';
+import { addToCart } from '../../../features/cart/cartSlice';
 
 import './CrackerConstructor.scss';
+import {
+  totalLimit,
+  options,
+  SMALL_PACK,
+  MEDIUM_PACK,
+  LARGE_PACK,
+} from './crackerConsts';
+
+import { calculatePrice } from './crackerUtils';
 
 export const CrackerConstructor = () => {
-  const {
-    cornProduct,
-    wheatProduct,
-    quinoaProduct,
-    autoFillProduct,
-    productPrice,
-    productWeight,
-  } = useSelector((state) => state.cart);
+  const [pendingProduct, setPendingProduct] = useState({
+    corn: 0,
+    wheat: 0,
+    quinoa: 0,
+    autoFillValue: 0,
+
+    price: 0,
+    weight: 0,
+  });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('choose your pack');
 
   const dispatch = useDispatch();
 
-  const totalLimit = 100;
-
-  const calculatePrice = () => {
-    return cornProduct * 1 + wheatProduct * 2 + quinoaProduct * 3;
-  };
-
   useEffect(() => {
     const availableRemain =
-      totalLimit - (cornProduct + wheatProduct + quinoaProduct);
+      totalLimit -
+      (pendingProduct.corn + pendingProduct.weight + pendingProduct.quinoa);
 
     if (availableRemain === totalLimit) {
-      dispatch(updateAutoFill(0));
-      dispatch(updateProductPrice(0));
+      setPendingProduct((prevProd) => ({
+        ...prevProd,
+        autoFillValue: 0,
+        price: 0,
+      }));
     } else {
-      dispatch(updateAutoFill(availableRemain));
-      dispatch(updateProductPrice(calculatePrice()));
+      let calculatedPrice = calculatePrice(
+        pendingProduct.corn,
+        pendingProduct.wheat,
+        pendingProduct.quinoa,
+      );
+      setPendingProduct((prevProd) => ({
+        ...prevProd,
+        autoFillValue: availableRemain,
+        price: calculatedPrice,
+      }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cornProduct, wheatProduct, quinoaProduct]);
+  }, [pendingProduct]);
 
-  const handleChange = (value, setFunction, productFirst, productSecond) => {
-    const newValue = parseFloat(value);
-    const maxValue = totalLimit - (productFirst + productSecond);
+  const handleCornChange = (newCorn) => {
+    const product = pendingProduct;
+    const newValue = parseFloat(newCorn);
+    const maxValue = totalLimit - (product.quinoa + product.wheat);
 
-    if (newValue <= maxValue) {
-      dispatch(setFunction(newValue));
-    } else {
-      dispatch(setFunction(maxValue));
-    }
+    let corn = newValue <= maxValue ? newValue : maxValue;
+
+    setPendingProduct((prevProduct) => ({ ...prevProduct, corn: corn }));
   };
+
+  const handleWheatChange = (newWheat) => {
+    const product = pendingProduct;
+    const newValue = parseFloat(newWheat);
+    const maxValue = totalLimit - (product.corn + product.quinoa);
+
+    let wheat = newValue <= maxValue ? newValue : maxValue;
+
+    setPendingProduct((prevProduct) => ({ ...prevProduct, wheat: wheat }));
+  };
+
+  const handleQuinoaChange = (newQuinoa) => {
+    const product = pendingProduct;
+    const newValue = parseFloat(newQuinoa);
+    const maxValue = totalLimit - (product.wheat + product.corn);
+
+    let quinoa = newValue <= maxValue ? newValue : maxValue;
+
+    setPendingProduct((prevProduct) => ({ ...prevProduct, quinoa: quinoa }));
+  };
+
+  const resetValues = () => {
+    pendingProduct.corn = 0;
+    pendingProduct.wheat = 0;
+    pendingProduct.quinoa = 0;
+    pendingProduct.autoFillValue = 0;
+    pendingProduct.weight = 0;
+    pendingProduct.price = 0;
+  };
+
+  // const handleChange = (value, setFunction, productFirst, productSecond) => {
+  //   const newValue = parseFloat(value);
+  //   const maxValue = totalLimit - (productFirst + productSecond);
+
+  //   if (newValue <= maxValue) {
+  //     setPendingProduct(newValue);
+  //   } else {
+  //     setPendingProduct(setFunction(maxValue));
+  //   }
+  // };
 
   const handleAddToCart = () => {
     const productData = {
       id: uuidv4(),
-      cornProduct,
-      wheatProduct,
-      quinoaProduct,
-      autoFillProduct,
-      weight: productWeight,
-      price: productPrice,
+      cornProduct: pendingProduct.corn,
+      wheatProduct: pendingProduct.wheat,
+      quinoaProduct: pendingProduct.quinoa,
+      autoFillProduct: pendingProduct.autoFillValue,
+      weight: pendingProduct.weight,
+      price: pendingProduct.price,
     };
 
     dispatch(addToCart(productData));
-    dispatch(resetValues());
+    resetValues();
     console.log(productData);
   };
-
-  const SMALL_PACK = 'SMALL PACK';
-  const MEDIUM_PACK = 'MEDIUM PACK';
-  const LARGE_PACK = 'LARGE PACK';
 
   const handlePackageOption = (packSize) => {
     setSelectedOption(packSize);
     switch (packSize.toUpperCase()) {
       case SMALL_PACK:
-        dispatch(updateProductWeight(1));
+        setPendingProduct({ ...pendingProduct, weight: 1 });
         break;
       case MEDIUM_PACK:
-        dispatch(updateProductWeight(2));
+        setPendingProduct({ ...pendingProduct, weight: 2 });
         break;
       case LARGE_PACK:
-        dispatch(updateProductWeight(3));
+        setPendingProduct({ ...pendingProduct, weight: 3 });
         break;
     }
 
     setIsMenuOpen(false);
   };
-
-  const customHandleStyle = {
-    backgroundColor: '#00ff00',
-    borderColor: '#00ff00',
-  };
-
-  const options = ['small pack', 'medium pack', 'large pack'];
 
   return (
     <section className="constructor cracker-constructor">
@@ -124,7 +159,7 @@ export const CrackerConstructor = () => {
                   Current Value:
                 </span>
                 <span className="cracker-constructor__amount">
-                  {productPrice} €
+                  {pendingProduct.price} €
                 </span>
               </div>
             </div>
@@ -142,16 +177,14 @@ export const CrackerConstructor = () => {
                   }}
                   min={0}
                   max={totalLimit}
-                  value={cornProduct}
+                  value={pendingProduct.corn}
                   step={1}
                   trackStyle={{ backgroundColor: '#00A651' }}
                   railStyle={{ backgroundColor: '#00A651' }}
-                  onChange={(value) =>
-                    handleChange(value, updateCorn, wheatProduct, quinoaProduct)
-                  }
+                  onChange={(value) => handleCornChange(value)}
                 />
                 <span className="cracker-constructor__percentages">
-                  {cornProduct}%
+                  {pendingProduct.corn}%
                 </span>
               </div>
 
@@ -165,16 +198,13 @@ export const CrackerConstructor = () => {
                   }}
                   min={0}
                   max={totalLimit}
-                  value={wheatProduct}
+                  value={pendingProduct.wheat}
                   trackStyle={{ backgroundColor: '#49743F' }}
                   railStyle={{ backgroundColor: '#49743F' }}
-                  handleStyle={customHandleStyle}
-                  onChange={(event) =>
-                    handleChange(event, updateWheat, cornProduct, quinoaProduct)
-                  }
+                  onChange={(value) => handleWheatChange(value)}
                 />
                 <span className="cracker-constructor__percentages">
-                  {wheatProduct} %
+                  {pendingProduct.wheat} %
                 </span>
               </div>
 
@@ -188,16 +218,14 @@ export const CrackerConstructor = () => {
                   }}
                   min={0}
                   max={totalLimit}
-                  value={quinoaProduct}
+                  value={pendingProduct.quinoa}
                   trackStyle={{ backgroundColor: '#ABA000' }}
                   railStyle={{ backgroundColor: '#ABA000' }}
                   step={1}
-                  onChange={(event) =>
-                    handleChange(event, updateQuinoa, cornProduct, wheatProduct)
-                  }
+                  onChange={(value) => handleQuinoaChange(value)}
                 />
                 <span className="cracker-constructor__percentages">
-                  {quinoaProduct} %
+                  {pendingProduct.quinoa} %
                 </span>
               </div>
 
@@ -211,13 +239,13 @@ export const CrackerConstructor = () => {
                   }}
                   min={0}
                   max={totalLimit}
-                  value={autoFillProduct}
+                  value={pendingProduct.autoFillValue}
                   readOnly
                   step={1}
                   trackClassName="custom-track"
                 />
                 <span className="cracker-constructor__percentages">
-                  {autoFillProduct} %
+                  {pendingProduct.autoFillValue} %
                 </span>
               </div>
             </div>
@@ -248,7 +276,7 @@ export const CrackerConstructor = () => {
                       open: isMenuOpen,
                     })}>
                     <ul className="package-options__select-options">
-                    {options.map((option) => (
+                      {options.map((option) => (
                         <li
                           key={option}
                           className={cn('package-options__option', {
@@ -262,20 +290,22 @@ export const CrackerConstructor = () => {
                   </div>
                 </div>
 
+                <div className="package-options__button-container">
+                  <button
+                    className="package-options__button btn btn--add"
+                    onClick={handleAddToCart}></button>
 
-              <div className="package-options__button-container">
-
-                <button className="package-options__button btn btn--add" onClick={handleAddToCart}>
-                </button>
-
-
-                <span className="package-options__button-add-to-cart btn" onClick={handleAddToCart}>
-                  add to cart
-                  <div className="package-options__krestik-wrapper">
-                  <span className="package-options__krestik"><AddButton/></span>
-                  </div>
-                </span>
-              </div>
+                  <span
+                    className="package-options__button-add-to-cart btn"
+                    onClick={handleAddToCart}>
+                    add to cart
+                    <div className="package-options__krestik-wrapper">
+                      <span className="package-options__krestik">
+                        <AddButton />
+                      </span>
+                    </div>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
