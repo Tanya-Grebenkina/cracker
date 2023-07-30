@@ -102,9 +102,6 @@ export const AddButton = () => {
   );
 };
 
-
-
-
 export const RemoveIcon = () => {
   return (
     <svg

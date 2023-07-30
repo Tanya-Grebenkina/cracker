@@ -2,7 +2,7 @@ import React from 'react';
 import './Hero.scss';
 
 
-export const Hero = () => {
+export const Hero: React.FC = () => {
   return (
     <section className="section-hero">
       <div className="container">

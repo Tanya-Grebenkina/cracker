@@ -6,7 +6,6 @@ import {
   Address,
   SocialMedia,
 } from '../Icons';
-
 import './Footer.scss';
 
 export const Footer = () => {

@@ -5,7 +5,7 @@ import { CrackerConstructor } from './CrackerConstructor';
 
 import './Cracker.scss';
 
-export const Cracker = () => {
+export const Cracker:React.FC = () => {
   return (
     <div className="section-cracker">
       <AboutCracker />

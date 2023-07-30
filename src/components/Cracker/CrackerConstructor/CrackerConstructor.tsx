@@ -9,14 +9,11 @@ import { CartItem, PendingProduct } from '../../../global/types';
 import { ArrowRedDown, ArrowRedUp, AddButton } from '../../Icons';
 import './CrackerConstructor.scss';
 
-import {
-  TOTAL_LIMIT,
-  PackSize,
-} from './crackerConsts';
+import { TOTAL_LIMIT, PackSize } from './crackerConsts';
 
 import { calculatePrice, calculateRemaining } from './crackerUtils';
 
-export const CrackerConstructor:React.FC = () => {
+export const CrackerConstructor: React.FC = () => {
   const [pendingProduct, setPendingProduct] = useState<PendingProduct>({
     corn: 0,
     wheat: 0,
@@ -28,7 +25,9 @@ export const CrackerConstructor:React.FC = () => {
   });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<PackSize>(PackSize.NONE_PACK);
+  const [selectedOption, setSelectedOption] = useState<PackSize>(
+    PackSize.NONE_PACK,
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -60,7 +59,10 @@ export const CrackerConstructor:React.FC = () => {
     }
   }, [pendingProduct.corn, pendingProduct.wheat, pendingProduct.quinoa]);
 
-  const handleProductChange = (productType: keyof PendingProduct, newValue: number) => {
+  const handleProductChange = (
+    productType: keyof PendingProduct,
+    newValue: number,
+  ) => {
     const updatedProduct = { ...pendingProduct, [productType]: newValue };
     const totalRemaining =
       TOTAL_LIMIT +
@@ -258,7 +260,11 @@ export const CrackerConstructor:React.FC = () => {
                             selected: selectedOption === option,
                             disabled: index === 0,
                           })}
-                          onClick={index === 0 ? undefined : () => handlePackageOption(option as PackSize)}>
+                          onClick={
+                            index === 0
+                              ? undefined
+                              : () => handlePackageOption(option as PackSize)
+                          }>
                           {option}
                         </li>
                       ))}
@@ -270,19 +276,19 @@ export const CrackerConstructor:React.FC = () => {
                   <button
                     className="package-options__button btn btn--add"
                     onClick={handleAddToCart}>
-                       <AddButton />
-                    </button>
+                    <AddButton />
+                  </button>
 
                   <button
-                      className="package-options__button-add-to-cart btn"
-                      onClick={handleAddToCart}>
-                      add to cart
-                      <div className="package-options__icon-plus-wrapper">
-                        <span className="package-options__icon-plus">
-                          <AddButton />
-                        </span>
-                      </div>
-                    </button>
+                    className="package-options__button-add-to-cart btn"
+                    onClick={handleAddToCart}>
+                    add to cart
+                    <div className="package-options__icon-plus-wrapper">
+                      <span className="package-options__icon-plus">
+                        <AddButton />
+                      </span>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>

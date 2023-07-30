@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { ArrowDown, ArrowUp } from '../Icons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';

@@ -1,7 +1,7 @@
 import React from 'react';
 import './AboutCracker.scss';
 
-export const AboutCracker = () => {
+export const AboutCracker: React.FC = () => {
   return (
     <section className="section-about about-cracker">
       <div className="container">

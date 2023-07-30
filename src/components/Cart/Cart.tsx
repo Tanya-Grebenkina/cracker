@@ -1,7 +1,6 @@
 import { CartItemComponent } from '../CartItemComponent/';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-
 import './Cart.scss';
 
 export const Cart = () => {
