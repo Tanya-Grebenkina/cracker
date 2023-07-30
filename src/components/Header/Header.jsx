@@ -19,7 +19,7 @@ export const Header = ({ toggleCart, showCart }) => {
               className="cart-bar__logo-link">
               <img
                 className="cart-bar__logo"
-                src="/src/assets/images/logo.png"
+                src="../../assets/images/logo.png"
                 alt="Cracker"
               />
             </a>
