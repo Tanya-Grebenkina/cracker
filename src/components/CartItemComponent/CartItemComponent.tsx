@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { removeItem } from '../../features/cart/cartSlice';
 import { RemoveIcon } from '../Icons';
 import { CartItem } from '../../global/types';
+import './CartItemComponent.scss';
 
 type CartItemProps = {
   item: CartItem;
@@ -11,6 +12,11 @@ type CartItemProps = {
 export const CartItemComponent: React.FC<CartItemProps> = ({ item }) => {
 
   const dispatch = useDispatch();
+
+  const handleRemoveItemClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    dispatch(removeItem(item.id));
+  };
 
   return (
     <div className="cart__item">
@@ -27,7 +33,7 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ item }) => {
       <div className="cart__item-price">{item.price} €</div>
       <div
         className="cart__item-remove"
-        onClick={() => dispatch(removeItem(item.id))}>
+        onClick={handleRemoveItemClick}>
         <a className="cart__btn-remove">
           <RemoveIcon/>
         </a>

@@ -7,8 +7,8 @@
 }
 
 .cart-bar {
+  position: relative;
   padding-block: 24px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -22,28 +22,6 @@
     align-items: center;
     column-gap: 24px;
   }
-
-  &__details-cart {
-    display: flex;
-    align-items: center;
-    column-gap: 4px;
-    cursor: pointer;
-  }
-
-  &__price {
-    text-transform: uppercase;
-  }
-
-  &__text {
-    text-transform: uppercase;
-  }
-
-  &__arrow {
-    display: block;
-    width: 24px;
-    height: 24px;
-  }
-
 
   &__icon-seed {
     position: relative;
@@ -70,5 +48,41 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  &__price {
+    text-transform: uppercase;
+  }
+
+  &__details-cart {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+    cursor: pointer;
+  }
+
+  &__text {
+    text-transform: uppercase;
+  }
+
+  &__arrow {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+
+  &__cart {
+    position: absolute;
+    top: 88px;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 586px;
+    height: 260px;
+    overflow: auto;
+    border-radius: 24px;
+    padding: 32px;
+    z-index: 2;
   }
 }

@@ -31,31 +31,32 @@ export const App = () => {
     dispatch(updateTotals());
   }, [cartItems]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
-        setShowCart(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+  //       setShowCart(false);
+  //     }
+  //   };
 
-    document.addEventListener('mousedown', handleClickOutside);
+  //   document.addEventListener('mousedown', handleClickOutside);
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
 
   return (
     <>
       <Header
         toggleCart={toggleCart}
         showCart={showCart}
+        setShowCart={setShowCart}
       />
-      {showCart && (
+      {/* {showCart && (
         <div ref={cartRef}>
           <Cart />
         </div>
-      )}
+      )} */}
       <Nav />
       <main>
         <Hero />
